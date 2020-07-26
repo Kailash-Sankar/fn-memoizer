@@ -1,8 +1,8 @@
 const Cache = require("./cache");
 
-function memoizer(fn) {
+function memoizer(fn, options) {
   // cache store
-  const resultsCache = Cache();
+  const resultsCache = Cache(options);
 
   // memoized wrapper function
   // capture all the input args

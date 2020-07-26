@@ -8,7 +8,7 @@
 ## Install
 
 ```bash
-
+  npm i fn-memoizer
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ supported options:
 { cacheSize : 10 } // defaults to 25
 
 ```js
-const memoizer = require("---");
+const memoizer = require("fn-memoizer");
 
 let count = 0;
 function calc(values, multiplier, labels) {
@@ -69,16 +69,22 @@ function add(a, b, c = 0) {
   count++;
   return a + b + c;
 }
-const memoAdd = memoizer(add);
+const memoAdd = memoizer(add, { cacheSize: 3 });
 
-memoAdd(1, 2);
-memoAdd(2, 4);
-memoAdd(1, 2);
-// count = 2
-memoAdd.clearCache();
-memoAdd(1, 2);
-// count = 3
-// cache was cleared, resulting in source function getting called again
+  memoAdd(5, 3);
+  memoAdd(3, 3);
+  memoAdd(1, 2);
+  memoAdd(2, 4));
+  // count 4
+  memoAdd(1, 2);
+  // count 4
+  memoAdd(5, 3);
+  // count 5
+  // cache size is 3, hence the least used was removed
+  memoAdd.clearCache();
+  memoAdd(1, 2);
+  // count 6
+  // cache was cleared, resulting in source function getting called again
 ```
 
 That's all folks.
