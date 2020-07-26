@@ -1,0 +1,4 @@
+.vscode
+.editorconfig
+index.test.js
+/node_modules

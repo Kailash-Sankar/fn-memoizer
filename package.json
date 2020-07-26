@@ -1,0 +1,32 @@
+{
+  "name": "fn-memoizer",
+  "version": "0.0.0",
+  "description": "A function memoizer with a LRU cache",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "./node_modules/.bin/eslint *.js",
+    "lint-fix": "./node_modules/.bin/eslint *.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "memoize",
+    "cache",
+    "function",
+    "lightweight"
+  ],
+  "author": "Kailash Sankar",
+  "license": "ISC",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "jest": "^25.4.0",
+    "node-fetch": "^2.6.0"
+  }
+}
