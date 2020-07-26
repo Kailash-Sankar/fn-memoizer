@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/Kailash-Sankar/fn-memoizer.git"
   },
   "keywords": [
     "memoize",
@@ -21,9 +21,9 @@
   "author": "Kailash Sankar",
   "license": "ISC",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/Kailash-Sankar/fn-memoizer/issues"
   },
-  "homepage": "",
+  "homepage": "https://github.com/Kailash-Sankar/fn-memoizer",
   "devDependencies": {
     "eslint": "^6.8.0",
     "jest": "^25.4.0",

@@ -48,7 +48,7 @@ test("basic async test", async () => {
   let count = 0;
   async function alpha(a, b) {
     count++;
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve(a + b);
       }, 500);

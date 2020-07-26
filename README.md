@@ -61,7 +61,7 @@ await memoizedGetTodo(1);
 // count = 2
 ```
 
-Pass cache size, also supports manual clear
+Pass cache size, also allows manual clear
 
 ```js
 let count = 0;
