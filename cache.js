@@ -1,12 +1,19 @@
 const DEFAULT_CACHE_SIZE = 25;
 
 // cache node
-function Node(key, value) {
+function Node(key, value, expires) {
   this.key = key;
   this.value = value;
   this.next = null;
   this.prev = null;
+  this.timestamp = expires ? Date.now() : null;
 }
+
+Node.prototype.hasExpired = function (diff) {
+  if (diff && this.timestamp) {
+    return Date.now() - this.timestamp >= diff;
+  }
+};
 
 // in-memory LRU cache
 function Cache(params = {}) {
@@ -16,12 +23,13 @@ function Cache(params = {}) {
   let size = 0;
   let options = {
     cacheSize: DEFAULT_CACHE_SIZE,
+    expiresAt: null,
     ...params,
   };
 
   // add a new node to cache
   function add(key, value) {
-    const node = new Node(key, value);
+    const node = new Node(key, value, options.expiresAt);
 
     if (head) {
       node.next = head;
@@ -37,7 +45,7 @@ function Cache(params = {}) {
 
     // remove a node if we reach size limit
     if (size > options.cacheSize) {
-      remove();
+      remove(tail);
     }
     hash[key] = node;
 
@@ -46,7 +54,7 @@ function Cache(params = {}) {
 
   // remove the tail node
   // the previous node becomes the tail
-  function remove() {
+  function _remove() {
     if (tail) {
       delete hash[tail.key];
       const prev = tail.prev;
@@ -54,6 +62,29 @@ function Cache(params = {}) {
       // in case head/tail are the same
       if (prev) {
         prev.next = null;
+      }
+      size--;
+    }
+  }
+
+  function remove(node) {
+    if (node) {
+      delete hash[node.key];
+
+      // if the node is in the middle
+      if (node.prev) {
+        node.prev.next = node.next;
+      }
+      if (node.next) {
+        node.next.prev = node.prev;
+      }
+      // if it's the tail node
+      if (node === tail) {
+        tail = node.prev;
+      }
+      // if it's the head node
+      if (node === head) {
+        head = node.next;
       }
       size--;
     }
@@ -89,8 +120,12 @@ function Cache(params = {}) {
   function find(key) {
     if (key in hash) {
       const node = hash[key];
-      refresh(node);
-      return node;
+      if (node.hasExpired(options.expiresAt)) {
+        remove(node);
+      } else {
+        refresh(node);
+        return node;
+      }
     }
     return null;
   }

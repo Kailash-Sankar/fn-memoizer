@@ -124,3 +124,29 @@ test("cache size", () => {
   expect(memoAdd(1, 2)).toEqual(3);
   expect(count).toEqual(6);
 });
+
+test("cache expiry", async () => {
+  let count = 0;
+  function add(a, b, c = 0) {
+    count++;
+    return a + b + c;
+  }
+  const memoAdd = memoizer(add, { cacheSize: 3, expiresAt: 1000 });
+
+  expect(memoAdd(5, 3)).toEqual(8);
+  expect(memoAdd(3, 3)).toEqual(6);
+  expect(memoAdd(1, 2)).toEqual(3);
+  expect(memoAdd(2, 4)).toEqual(6);
+  expect(count).toEqual(4);
+
+  await new Promise((r) => setTimeout(r, 2000));
+
+  expect(memoAdd(1, 2)).toEqual(3);
+  expect(count).toEqual(5);
+
+  expect(memoAdd(1, 2)).toEqual(3);
+  expect(count).toEqual(5);
+
+  expect(memoAdd(2, 4)).toEqual(6);
+  expect(count).toEqual(6);
+});
