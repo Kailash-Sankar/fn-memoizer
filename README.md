@@ -5,6 +5,8 @@
 
 > A function memoizer with a LRU cache
 
+Read more about the module at [dev.to post](https://dev.to/ksankar/build-a-function-memoizer-part-1-3n0o)
+
 ## Install
 
 ```bash
@@ -14,9 +16,16 @@
 ## Usage
 
 Call memoizer with a function to memoize and optional params.
+All input params are JSON.strigified to create cache key.
 
 supported options:
-{ cacheSize : 10 } // defaults to 25
+
+```js
+{
+  cacheSize : 10, // defaults to 25
+  expiresAt : 1000 // value in ms, defaults to null (no expiry)
+}
+```
 
 ```js
 const memoizer = require("fn-memoizer");
@@ -85,6 +94,36 @@ const memoAdd = memoizer(add, { cacheSize: 3 });
   memoAdd(1, 2);
   // count 6
   // cache was cleared, resulting in source function getting called again
+```
+
+Supports expiry of cached values, accepts expiresAt value in ms
+
+```js
+(async function () {
+  let count = 0;
+  function add(a, b, c = 0) {
+    count++;
+    return a + b + c;
+  }
+  const memoAdd = memoizer(add, { cacheSize: 3, expiresAt: 1000 });
+
+  memoAdd(5, 3);
+  memoAdd(3, 3);
+  memoAdd(1, 2);
+  memoAdd(2, 4);
+  console.log(count); // 4
+
+  await new Promise((r) => setTimeout(r, 2000));
+
+  memoAdd(1, 2);
+  console.log(count); // 5, cache expired
+
+  memoAdd(1, 2);
+  console.log(count); // 5, pulled from cache
+
+  memoAdd(2, 4);
+  console.log(count); // 6, expired value
+})();
 ```
 
 That's all folks.
